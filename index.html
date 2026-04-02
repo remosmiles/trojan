@@ -5,129 +5,231 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KI Live-Demo: Trojaner-Konzept</title>
     <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-pink: #ff00ea;
+            --neon-red: #ff003c;
+            --bg-dark: #0a0a0f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: #fff;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            margin: 0;
             overflow: hidden;
+            /* Animiertes Cyber-Grid im Hintergrund */
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            background-position: center center;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 30px 30px; }
         }
 
         h1 {
+            font-size: 2.5rem;
             margin-bottom: 2rem;
             text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            z-index: 10;
         }
 
-        /* Der Start-Button */
+        /* Glassmorphism Container */
+        .glass-panel {
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            min-width: 400px;
+        }
+
+        /* Der leuchtende Start-Button */
         #startBtn {
-            padding: 15px 30px;
+            padding: 15px 40px;
             font-size: 1.2rem;
-            font-weight: bold;
-            color: #fff;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            border: none;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--neon-blue);
+            background: transparent;
+            border: 2px solid var(--neon-blue);
             border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--neon-blue), inset 0 0 10px var(--neon-blue);
+            letter-spacing: 1px;
         }
 
         #startBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+            background: var(--neon-blue);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue), inset 0 0 10px #fff;
+            transform: scale(1.05);
         }
 
-        /* Container für die Animation */
         #simulationArea {
             display: none;
             flex-direction: column;
             align-items: center;
-            margin-top: 2rem;
             width: 100%;
-            max-width: 600px;
-        }
-
-        .icon-box {
-            font-size: 5rem;
-            margin: 20px;
-            position: relative;
         }
 
         .status-text {
+            font-size: 1.1rem;
+            color: #a1a1aa;
+            margin-bottom: 2rem;
+            min-height: 2rem;
+            font-family: monospace;
+        }
+
+        /* Harmloses Icon - Einladend und leuchtend */
+        .icon-box {
+            font-size: 4rem;
+            margin: 20px;
+            position: relative;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            transition: all 0.3s;
+        }
+
+        #benignApp {
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+        }
+
+        #benignApp:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.6);
+            border-color: var(--neon-blue);
+        }
+
+        .app-title {
+            font-size: 1rem;
+            margin-top: 10px;
+            font-family: monospace;
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px var(--neon-blue);
+        }
+
+        /* Malware Icon - Aggressiv und rot */
+        #malwareApp {
+            border-color: var(--neon-red);
+            background: rgba(255, 0, 60, 0.1);
+            box-shadow: 0 0 30px rgba(255, 0, 60, 0.4);
+        }
+
+        .trojan-title {
             font-size: 1.2rem;
-            color: #94a3b8;
-            margin-bottom: 1rem;
-            min-height: 1.5rem;
+            font-weight: bold;
+            color: var(--neon-red);
+            text-shadow: 0 0 10px var(--neon-red);
+            margin-top: 10px;
+            text-transform: uppercase;
         }
 
         /* Animationen */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
 
-        @keyframes slideOut {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
+        .floating { animation: floating 3s ease-in-out infinite; }
 
         @keyframes glitch {
-            0% { transform: translate(0) }
-            20% { transform: translate(-2px, 2px) }
-            40% { transform: translate(-2px, -2px) }
-            60% { transform: translate(2px, 2px) }
-            80% { transform: translate(2px, -2px) }
-            100% { transform: translate(0) }
+            0% { transform: translate(0); filter: drop-shadow(0 0 10px var(--neon-red)); }
+            20% { transform: translate(-4px, 4px); filter: drop-shadow(-2px 0 0 var(--neon-blue)); }
+            40% { transform: translate(-4px, -4px); filter: drop-shadow(2px 0 0 var(--neon-pink)); }
+            60% { transform: translate(4px, 4px); filter: drop-shadow(-2px 0 0 var(--neon-red)); }
+            80% { transform: translate(4px, -4px); filter: drop-shadow(2px 0 0 var(--neon-blue)); }
+            100% { transform: translate(0); filter: drop-shadow(0 0 10px var(--neon-red)); }
         }
 
+        .glitch-active { animation: glitch 0.2s infinite; }
         .hidden { display: none !important; }
-        
-        .trojan-active {
-            color: #ef4444;
-            animation: glitch 0.3s infinite;
-        }
 
+        /* Datenleck Animation */
         .data-leak {
-            font-size: 2rem;
+            font-size: 1.5rem;
             position: absolute;
             top: 50%;
             left: 50%;
             opacity: 0;
+            pointer-events: none;
+            filter: drop-shadow(0 0 5px var(--neon-blue));
         }
 
         @keyframes leakAnimation {
-            0% { top: 10%; left: 50%; opacity: 1; }
-            100% { top: -100px; left: 150%; opacity: 0; }
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+            50% { opacity: 1; filter: drop-shadow(0 0 10px var(--neon-pink)); }
+            100% { transform: translate(150px, -150px) scale(1.5); opacity: 0; }
         }
+        
+        @keyframes screenShake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        .shake { animation: screenShake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
 
     </style>
 </head>
 <body>
 
-    <h1>Wie ein Trojaner funktioniert<br><span style="font-size: 1rem; color: #64748b;">(Edukative Simulation)</span></h1>
+    <h1>Trojan.exe <br><span style="font-size: 1rem; color: var(--neon-blue); font-weight: normal; text-shadow: none;">// Security Simulation</span></h1>
     
-    <button id="startBtn">Simulation starten</button>
+    <div class="glass-panel" id="mainPanel">
+        <button id="startBtn">System starten</button>
 
-    <div id="simulationArea">
-        <div class="status-text" id="statusText">Warte auf Benutzeraktion...</div>
-        
-        <div class="icon-box" id="benignApp" style="cursor: pointer;">
-            🎁
-            <div style="font-size: 1rem; text-align: center; color: #cbd5e1;">Gratis_Spiel.exe</div>
-        </div>
+        <div id="simulationArea">
+            <div class="status-text" id="statusText">> Warte auf Benutzereingabe...</div>
+            
+            <div class="icon-box floating" id="benignApp">
+                ✨
+                <div class="app-title">Super_Game_Free.exe</div>
+            </div>
 
-        <div class="icon-box hidden" id="malwareApp">
-            👾
-            <div style="font-size: 1rem; text-align: center; color: #ef4444;" class="trojan-active">System kompromittiert</div>
-            <span class="data-leak">📄</span>
-            <span class="data-leak" style="animation-delay: 0.5s;">🔑</span>
-            <span class="data-leak" style="animation-delay: 1s;">💳</span>
+            <div class="icon-box hidden" id="malwareApp">
+                💀
+                <div class="trojan-title glitch-active">SYSTEM COMPROMISED</div>
+                <span class="data-leak">📄</span>
+                <span class="data-leak" style="animation-delay: 0.3s;">🔑</span>
+                <span class="data-leak" style="animation-delay: 0.6s;">💳</span>
+                <span class="data-leak" style="animation-delay: 0.9s;">✉️</span>
+            </div>
         </div>
     </div>
 
@@ -138,36 +240,57 @@
         const benignApp = document.getElementById('benignApp');
         const malwareApp = document.getElementById('malwareApp');
         const dataLeaks = document.querySelectorAll('.data-leak');
+        const body = document.body;
 
-        // Schritt 1: Simulation einblenden
+        // Typ-Effekt für den Terminal-Text
+        function typeWriter(text, element, speed = 30) {
+            element.innerHTML = "> ";
+            let i = 0;
+            element.style.color = "var(--neon-blue)";
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
         startBtn.addEventListener('click', () => {
             startBtn.style.display = 'none';
             simulationArea.style.display = 'flex';
-            statusText.innerText = "Schritt 1: Der Nutzer lädt eine scheinbar harmlose Datei herunter.";
-            benignApp.style.animation = 'pulse 2s infinite';
+            typeWriter("Schritt 1: Nutzer findet einen verlockenden Download.", statusText);
         });
 
-        // Schritt 2: Klick auf die harmlose Datei (Ausführung)
         benignApp.addEventListener('click', () => {
-            benignApp.style.animation = 'none';
-            statusText.innerText = "Das 'Spiel' öffnet sich. Aber im Hintergrund passiert etwas anderes...";
+            benignApp.classList.remove('floating');
+            typeWriter("Führe Super_Game_Free.exe aus... Entpacke Dateien...", statusText);
             
+            // Simuliere Ladezeit
             setTimeout(() => {
+                // Der Twist: Bildschirm wackelt, harmlose App verschwindet
+                body.classList.add('shake');
                 benignApp.classList.add('hidden');
                 malwareApp.classList.remove('hidden');
-                malwareApp.style.animation = 'slideOut 0.5s ease-out';
-                statusText.innerHTML = "<span style='color: #ef4444;'>Schritt 2: Die versteckte Payload (der Trojaner) wird ausgeführt!</span>";
                 
-                // Simuliere Datenabfluss
+                statusText.style.color = "var(--neon-red)";
+                statusText.innerHTML = "> WARNUNG: Versteckte Payload (Trojaner) aktiviert!";
+                
+                // Beende das Wackeln nach kurzer Zeit
+                setTimeout(() => body.classList.remove('shake'), 400);
+
+                // Starte Datenleck-Animation
                 dataLeaks.forEach(leak => {
-                    leak.style.animation = 'leakAnimation 2s infinite';
+                    leak.style.animation = 'leakAnimation 1.5s infinite ease-out';
                 });
 
+                // Letztes Update im Text
                 setTimeout(() => {
-                    statusText.innerHTML = "Schritt 3: Der Trojaner öffnet eine Hintertür oder stiehlt Daten (Passwörter, Dokumente).";
-                }, 2500);
+                    statusText.innerHTML = "> <span style='color: var(--neon-red); text-shadow: 0 0 5px var(--neon-red);'>Hintertür geöffnet. Daten werden exfiltriert...</span>";
+                }, 2000);
 
-            }, 1500);
+            }, 1800);
         });
     </script>
 
