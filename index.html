@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KI Live-Demo: Trojaner-Konzept & Absturz</title>
+    <title>KI Live-Demo: Trojaner-Konzept & Absturz (Extended)</title>
     <style>
         :root {
             --neon-blue: #00f3ff;
@@ -111,7 +111,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 150px;
+            height: 120px;
             margin-bottom: 20px;
         }
 
@@ -148,12 +148,12 @@
 
         .trojan-title { font-size: 1.2rem; font-weight: bold; color: var(--neon-red); text-shadow: 0 0 10px var(--neon-red); margin-top: 10px; text-transform: uppercase; }
 
-        /* NEU: Data Exfiltration Dashboard */
+        /* Dashboard */
         #dataExfiltration {
             display: none;
             flex-direction: column;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 10px;
             text-align: left;
             border-top: 1px solid rgba(255, 0, 60, 0.3);
             padding-top: 20px;
@@ -162,7 +162,7 @@
         .data-module {
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             background: rgba(0,0,0,0.3);
             padding: 10px;
             border-radius: 8px;
@@ -170,9 +170,7 @@
         }
 
         .data-icon { font-size: 1.8rem; margin-right: 15px; width: 40px; text-align: center; }
-        
         .data-details { flex-grow: 1; font-family: monospace; }
-        
         .data-title { font-size: 0.9rem; color: #a1a1aa; margin-bottom: 5px; display: flex; justify-content: space-between; }
 
         .progress-track {
@@ -199,7 +197,16 @@
             text-shadow: 0 0 5px var(--neon-orange);
         }
 
-        /* Kleines Terminal Log */
+        /* Kontakt-Zähler Style */
+        .contact-counter {
+            font-size: 1.2rem;
+            color: var(--neon-pink);
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px var(--neon-pink);
+        }
+
+        /* Mini Terminal */
         .mini-terminal {
             height: 80px;
             background: #000;
@@ -213,7 +220,7 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            margin-top: 10px;
+            margin-top: 5px;
         }
         .log-line { margin: 2px 0; opacity: 0.8; }
 
@@ -283,7 +290,15 @@
                     </div>
                 </div>
 
-                <div class="data-module">
+                <div class="data-module" style="border-left-color: var(--neon-pink);">
+                    <div class="data-icon">👥</div>
+                    <div class="data-details">
+                        <div class="data-title"><span>Adressbuch & Kontakte exfiltrieren</span></div>
+                        <div class="contact-counter">Exportiert: <span id="contactCount">0</span> / 1842</div>
+                    </div>
+                </div>
+
+                <div class="data-module" style="border-left-color: var(--neon-blue);">
                     <div class="data-icon">🖼️</div>
                     <div class="data-details">
                         <div class="data-title"><span>C:\Users\Bilder\Archiv</span> <span id="photoPct">0%</span></div>
@@ -319,7 +334,7 @@
     <div class="glass-panel hidden" id="safeZone">
         <h2>KEINE PANIK!</h2>
         <p>Dein PC ist sicher.<br>Dies war eine detaillierte Simulation eines Trojaner-Angriffs.</p>
-        <p style="font-size: 1rem; color: var(--neon-blue); margin-bottom: 2rem;">// Lerninhalt: Malware zielt gezielt auf Mails, Bilder und gespeicherte Passwörter ab.</p>
+        <p style="font-size: 1rem; color: var(--neon-blue); margin-bottom: 2rem;">// Lerninhalt: Trojaner operieren geräuschlos und stehlen umfassende Identitätsdaten.</p>
         <button id="restartBtn" onclick="location.reload()">Simulation Neustarten</button>
     </div>
 
@@ -336,7 +351,6 @@
         const safeZone = document.getElementById('safeZone');
         const miniTerminal = document.getElementById('miniTerminal');
 
-        // Hilfsfunktion: Text wie im Terminal tippen
         function typeWriter(text, element, speed = 30) {
             element.innerHTML = "> ";
             element.style.color = "var(--neon-blue)";
@@ -351,7 +365,6 @@
             type();
         }
 
-        // Hilfsfunktion: Terminal Logs hinzufügen
         function addLog(text) {
             const line = document.createElement('div');
             line.className = 'log-line';
@@ -369,7 +382,9 @@
         benignApp.addEventListener('click', () => {
             benignApp.style.display = 'none';
             
-            // Phase 1: Trojaner Reveal
+            // Timeline Start (0.0s)
+            
+            // Phase 1: Trojaner Reveal (bei 1.5s)
             setTimeout(() => {
                 body.classList.add('shake');
                 malwareApp.classList.remove('hidden');
@@ -377,37 +392,51 @@
                 
                 statusText.style.color = "var(--neon-red)";
                 statusText.innerHTML = "> WARNUNG: Trojaner entpackt! Verbinde zum C2-Server...";
-                
                 setTimeout(() => body.classList.remove('shake'), 400);
 
-                // Phase 2: Data Exfiltration Dashboard anzeigen
+                // Phase 2: Data Exfiltration Start (bei 3.0s)
                 setTimeout(() => {
                     exfiltrationArea.style.display = 'flex';
                     statusText.innerHTML = "> <span style='color: var(--neon-red);'>Hintertür aktiv. Starte Daten-Exfiltration!</span>";
                     
-                    // --- Animation: Email Upload ---
+                    // --- Mails (Dauert ca. 5 Sekunden) ---
                     let mailProgress = 0;
                     const mailBar = document.getElementById('mailBar');
                     const mailPct = document.getElementById('mailPct');
                     const mailInterval = setInterval(() => {
-                        mailProgress += Math.random() * 5;
+                        mailProgress += Math.random() * 2; 
                         if(mailProgress >= 100) { mailProgress = 100; clearInterval(mailInterval); addLog("> mail.db ... EXFILTRATED"); }
                         mailBar.style.width = mailProgress + '%';
                         mailPct.innerText = Math.floor(mailProgress) + '%';
                     }, 100);
 
-                    // --- Animation: Fotos Upload (etwas langsamer) ---
+                    // --- NEU: Kontakte Zähler (Dauert ca. 6.5 Sekunden) ---
+                    let currentContacts = 0;
+                    const maxContacts = 1842;
+                    const contactElement = document.getElementById('contactCount');
+                    const contactInterval = setInterval(() => {
+                        currentContacts += Math.floor(Math.random() * 30) + 5; 
+                        if(currentContacts >= maxContacts) {
+                            currentContacts = maxContacts;
+                            clearInterval(contactInterval);
+                            addLog("> contacts.vcf ... UPLOADED");
+                            contactElement.style.color = "var(--neon-green)";
+                        }
+                        contactElement.innerText = currentContacts;
+                    }, 120);
+
+                    // --- Fotos Upload (Dauert ca. 7.5 Sekunden) ---
                     let photoProgress = 0;
                     const photoBar = document.getElementById('photoBar');
                     const photoPct = document.getElementById('photoPct');
                     const photoInterval = setInterval(() => {
-                        photoProgress += Math.random() * 3;
-                        if(photoProgress >= 100) { photoProgress = 100; clearInterval(photoInterval); addLog("> /Pictures/Archive ... UPLOADED");}
+                        photoProgress += Math.random() * 2;
+                        if(photoProgress >= 100) { photoProgress = 100; clearInterval(photoInterval); addLog("> /Pictures/Archive ... COMPLETED");}
                         photoBar.style.width = photoProgress + '%';
                         photoPct.innerText = Math.floor(photoProgress) + '%';
                     }, 150);
 
-                    // --- Animation: Passwort Cracker (Matrix Effekt) ---
+                    // --- Passwort Cracker (Dauert ca. 6 Sekunden) ---
                     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&!";
                     const passElement = document.getElementById('passCrack');
                     let crackTicks = 0;
@@ -417,21 +446,23 @@
                         passElement.innerText = randomStr;
                         crackTicks++;
                         
-                        if(crackTicks > 30) {
+                        if(crackTicks > 80) { // Länger gemacht
                             clearInterval(crackInterval);
                             passElement.innerText = "PayPal: admin123!";
                             passElement.style.color = "var(--neon-green)";
                             addLog("> Decrypting Chrome Passwords ... SUCCESS");
                         }
-                    }, 80);
+                    }, 70);
 
-                    // --- Terminal Fake Logs rattern lassen ---
+                    // --- Terminal Logs (Über 8.5 Sekunden verteilt) ---
                     let logTicks = 0;
                     const logMsgs = [
                         "> Scanning C:\\Users\\...",
                         "> Found wallet.dat",
                         "> Compressing files...",
+                        "> Extracting WhatsApp backup...",
                         "> Bypassing Windows Defender...",
+                        "> Copying clipboard history...",
                         "> Uploading payload via port 443..."
                     ];
                     const logInterval = setInterval(() => {
@@ -439,16 +470,16 @@
                             addLog(logMsgs[logTicks]);
                             logTicks++;
                         }
-                    }, 800);
+                    }, 1200);
 
-                    // Phase 3: System Overload & Absturz
+                    // Phase 3: System Overload (bei 11.5s)
                     setTimeout(() => {
                         statusText.innerHTML = "> <span style='color: var(--neon-red); font-weight:bold;'>SYSTEM ÜBERLASTET. ABSTURZ STEHT BEVOR.</span>";
-                        malwareApp.style.animation = 'glitch 0.05s infinite'; // Extrem schnelles Flackern
+                        malwareApp.style.animation = 'glitch 0.05s infinite';
                         body.classList.add('shake');
                         
+                        // Phase 4: Blackout (bei exakt 15.0s)
                         setTimeout(() => {
-                            // BLACKOUT
                             crashScreen.style.display = 'flex';
                             mainPanel.style.display = 'none';
                             document.getElementById('mainTitle').style.display = 'none';
@@ -456,7 +487,7 @@
                             body.style.backgroundImage = 'none';
                             body.style.backgroundColor = '#000';
 
-                            // Entwarnung
+                            // Entwarnung nach dem Absturz
                             setTimeout(() => {
                                 crashScreen.style.display = 'none';
                                 safeZone.classList.remove('hidden');
@@ -464,13 +495,13 @@
                                 body.style.backgroundColor = 'var(--bg-dark)';
                             }, 4000);
 
-                        }, 2000);
+                        }, 3500); 
 
-                    }, 4500); // Zeit für den Datenklau, bevor es abstürzt
+                    }, 8500); // Warten nach Start der Exfiltration
 
-                }, 1500); // Pause nach dem Trojaner Reveal
+                }, 1500); 
 
-            }, 800); // Ladezeit des Fake-Spiels
+            }, 1500); // Ladezeit des Fake-Spiels
         });
     </script>
 
