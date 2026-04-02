@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KI Live-Demo: Trojaner-Konzept</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        h1 {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* Der Start-Button */
+        #startBtn {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #startBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+        }
+
+        /* Container für die Animation */
+        #simulationArea {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .icon-box {
+            font-size: 5rem;
+            margin: 20px;
+            position: relative;
+        }
+
+        .status-text {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+            min-height: 1.5rem;
+        }
+
+        /* Animationen */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes slideOut {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
+        .hidden { display: none !important; }
+        
+        .trojan-active {
+            color: #ef4444;
+            animation: glitch 0.3s infinite;
+        }
+
+        .data-leak {
+            font-size: 2rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            opacity: 0;
+        }
+
+        @keyframes leakAnimation {
+            0% { top: 10%; left: 50%; opacity: 1; }
+            100% { top: -100px; left: 150%; opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Wie ein Trojaner funktioniert<br><span style="font-size: 1rem; color: #64748b;">(Edukative Simulation)</span></h1>
+    
+    <button id="startBtn">Simulation starten</button>
+
+    <div id="simulationArea">
+        <div class="status-text" id="statusText">Warte auf Benutzeraktion...</div>
+        
+        <div class="icon-box" id="benignApp" style="cursor: pointer;">
+            🎁
+            <div style="font-size: 1rem; text-align: center; color: #cbd5e1;">Gratis_Spiel.exe</div>
+        </div>
+
+        <div class="icon-box hidden" id="malwareApp">
+            👾
+            <div style="font-size: 1rem; text-align: center; color: #ef4444;" class="trojan-active">System kompromittiert</div>
+            <span class="data-leak">📄</span>
+            <span class="data-leak" style="animation-delay: 0.5s;">🔑</span>
+            <span class="data-leak" style="animation-delay: 1s;">💳</span>
+        </div>
+    </div>
+
+    <script>
+        const startBtn = document.getElementById('startBtn');
+        const simulationArea = document.getElementById('simulationArea');
+        const statusText = document.getElementById('statusText');
+        const benignApp = document.getElementById('benignApp');
+        const malwareApp = document.getElementById('malwareApp');
+        const dataLeaks = document.querySelectorAll('.data-leak');
+
+        // Schritt 1: Simulation einblenden
+        startBtn.addEventListener('click', () => {
+            startBtn.style.display = 'none';
+            simulationArea.style.display = 'flex';
+            statusText.innerText = "Schritt 1: Der Nutzer lädt eine scheinbar harmlose Datei herunter.";
+            benignApp.style.animation = 'pulse 2s infinite';
+        });
+
+        // Schritt 2: Klick auf die harmlose Datei (Ausführung)
+        benignApp.addEventListener('click', () => {
+            benignApp.style.animation = 'none';
+            statusText.innerText = "Das 'Spiel' öffnet sich. Aber im Hintergrund passiert etwas anderes...";
+            
+            setTimeout(() => {
+                benignApp.classList.add('hidden');
+                malwareApp.classList.remove('hidden');
+                malwareApp.style.animation = 'slideOut 0.5s ease-out';
+                statusText.innerHTML = "<span style='color: #ef4444;'>Schritt 2: Die versteckte Payload (der Trojaner) wird ausgeführt!</span>";
+                
+                // Simuliere Datenabfluss
+                dataLeaks.forEach(leak => {
+                    leak.style.animation = 'leakAnimation 2s infinite';
+                });
+
+                setTimeout(() => {
+                    statusText.innerHTML = "Schritt 3: Der Trojaner öffnet eine Hintertür oder stiehlt Daten (Passwörter, Dokumente).";
+                }, 2500);
+
+            }, 1500);
+        });
+    </script>
+
+</body>
+</html>
