@@ -66,8 +66,8 @@
             transition: opacity 0.5s;
         }
 
-        /* Der leuchtende Start-Button */
-        #startBtn {
+        /* Styling für beide Buttons */
+        #startBtn, #restartBtn {
             padding: 15px 40px;
             font-size: 1.2rem;
             font-weight: 800;
@@ -82,7 +82,7 @@
             letter-spacing: 1px;
         }
 
-        #startBtn:hover {
+        #startBtn:hover, #restartBtn:hover {
             background: var(--neon-blue);
             color: var(--bg-dark);
             box-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue), inset 0 0 10px #fff;
@@ -198,7 +198,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: #000; /* Totaler Blackout */
+            background-color: #000;
             color: #fff;
             display: none;
             justify-content: center;
@@ -272,8 +272,8 @@
     <div class="glass-panel hidden" id="safeZone">
         <h2>KEINE PANIK!</h2>
         <p>Dein PC ist nicht abgestürzt.<br>Das war nur eine visuelle Simulation im Browser.</p>
-        <p style="font-size: 1rem; color: var(--neon-blue);">// Lerninhalt: Trojaner tarnen sich und verursachen Chaos.</p>
-        <button id="startBtn" onclick="location.reload()">Simulation Neustarten</button>
+        <p style="font-size: 1rem; color: var(--neon-blue); margin-bottom: 2rem;">// Lerninhalt: Trojaner tarnen sich und verursachen Chaos.</p>
+        <button id="restartBtn" onclick="location.reload()">Simulation Neustarten</button>
     </div>
 
     <script>
@@ -314,7 +314,7 @@
             typeWriter("Führe Super_Game_Free.exe aus... Entpacke Dateien...", statusText);
             
             setTimeout(() => {
-                // Phase 1: Der Schock (Shake & Malware-Enthüllung)
+                // Phase 1: Der Schock
                 body.classList.add('shake');
                 benignApp.classList.add('hidden');
                 malwareApp.classList.remove('hidden');
@@ -335,7 +335,6 @@
                 setTimeout(() => {
                     statusText.innerHTML = "> <span style='color: var(--neon-red); font-weight:bold;'>KRITISCHER FEHLER: SYSTEMWIDERSTAND ZWECKLOS.</span>";
                     
-                    // Intensiveres Flackern vor dem Absturz
                     malwareApp.style.animation = 'glitch 0.1s infinite'; 
                     
                     setTimeout(() => {
@@ -344,7 +343,7 @@
                         mainPanel.style.display = 'none';
                         mainTitle.style.display = 'none';
                         body.classList.remove('shake');
-                        body.style.backgroundImage = 'none'; // Grid entfernen
+                        body.style.backgroundImage = 'none'; 
                         body.style.backgroundColor = '#000';
 
                         // Phase 4: Entwarnung nach dem Absturz
@@ -352,12 +351,13 @@
                             crashScreen.style.display = 'none';
                             safeZone.classList.remove('hidden');
                             safeZone.style.display = 'flex';
-                            body.style.backgroundColor = var(--bg-dark); // Hintergrund zurücksetzen
-                        }, 4000); // 4 Sekunden Blackout
+                            // HIER WAR DER FEHLER: Anführungszeichen haben gefehlt!
+                            body.style.backgroundColor = 'var(--bg-dark)'; 
+                        }, 4000); 
 
-                    }, 2500); // Zeit bis zum Blackout
+                    }, 2500); 
 
-                }, 5000); // Zeit nach Datenexfiltration bis zum Chaos
+                }, 5000); 
 
             }, 1800);
         });
