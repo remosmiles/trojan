@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KI Live-Demo: Trojaner-Konzept</title>
+    <title>KI Live-Demo: Trojaner-Konzept & Absturz</title>
     <style>
         :root {
             --neon-blue: #00f3ff;
             --neon-pink: #ff00ea;
             --neon-red: #ff003c;
+            --neon-green: #39ff14;
             --bg-dark: #0a0a0f;
         }
 
@@ -28,7 +29,6 @@
             justify-content: center;
             height: 100vh;
             overflow: hidden;
-            /* Animiertes Cyber-Grid im Hintergrund */
             background-image: 
                 linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
@@ -42,7 +42,7 @@
             100% { background-position: 30px 30px; }
         }
 
-        h1 {
+        h1#mainTitle {
             font-size: 2.5rem;
             margin-bottom: 2rem;
             text-align: center;
@@ -52,7 +52,6 @@
             z-index: 10;
         }
 
-        /* Glassmorphism Container */
         .glass-panel {
             background: rgba(20, 20, 30, 0.6);
             backdrop-filter: blur(12px);
@@ -64,6 +63,7 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
             z-index: 10;
             min-width: 400px;
+            transition: opacity 0.5s;
         }
 
         /* Der leuchtende Start-Button */
@@ -104,7 +104,6 @@
             font-family: monospace;
         }
 
-        /* Harmloses Icon - Einladend und leuchtend */
         .icon-box {
             font-size: 4rem;
             margin: 20px;
@@ -135,7 +134,6 @@
             text-shadow: 0 0 5px var(--neon-blue);
         }
 
-        /* Malware Icon - Aggressiv und rot */
         #malwareApp {
             border-color: var(--neon-red);
             background: rgba(255, 0, 60, 0.1);
@@ -151,28 +149,26 @@
             text-transform: uppercase;
         }
 
-        /* Animationen */
+        /* Animations */
         @keyframes floating {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
             100% { transform: translateY(0px); }
         }
-
         .floating { animation: floating 3s ease-in-out infinite; }
 
         @keyframes glitch {
-            0% { transform: translate(0); filter: drop-shadow(0 0 10px var(--neon-red)); }
-            20% { transform: translate(-4px, 4px); filter: drop-shadow(-2px 0 0 var(--neon-blue)); }
-            40% { transform: translate(-4px, -4px); filter: drop-shadow(2px 0 0 var(--neon-pink)); }
-            60% { transform: translate(4px, 4px); filter: drop-shadow(-2px 0 0 var(--neon-red)); }
-            80% { transform: translate(4px, -4px); filter: drop-shadow(2px 0 0 var(--neon-blue)); }
-            100% { transform: translate(0); filter: drop-shadow(0 0 10px var(--neon-red)); }
+            0% { transform: translate(0); filter: drop-shadow(0 0 10px var(--neon-red)); opacity: 1; }
+            20% { transform: translate(-4px, 4px); filter: drop-shadow(-2px 0 0 var(--neon-blue)); opacity: 0.8; }
+            40% { transform: translate(-4px, -4px); filter: drop-shadow(2px 0 0 var(--neon-pink)); opacity: 1; }
+            60% { transform: translate(4px, 4px); filter: drop-shadow(-2px 0 0 var(--neon-red)); opacity: 0.9; }
+            80% { transform: translate(4px, -4px); filter: drop-shadow(2px 0 0 var(--neon-blue)); opacity: 1; }
+            100% { transform: translate(0); filter: drop-shadow(0 0 10px var(--neon-red)); opacity: 1; }
         }
-
         .glitch-active { animation: glitch 0.2s infinite; }
+
         .hidden { display: none !important; }
 
-        /* Datenleck Animation */
         .data-leak {
             font-size: 1.5rem;
             position: absolute;
@@ -182,7 +178,6 @@
             pointer-events: none;
             filter: drop-shadow(0 0 5px var(--neon-blue));
         }
-
         @keyframes leakAnimation {
             0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
             50% { opacity: 1; filter: drop-shadow(0 0 10px var(--neon-pink)); }
@@ -190,26 +185,58 @@
         }
         
         @keyframes screenShake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
+            0% { transform: translate(1px, 1px); }
+            50% { transform: translate(-3px, -2px); }
+            100% { transform: translate(1px, 1px); }
+        }
+        .shake { animation: screenShake 0.1s infinite; }
+
+        /* Absturz-Screen-Style */
+        #crashScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000; /* Totaler Blackout */
+            color: #fff;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            font-family: monospace;
+            font-size: 1rem;
+            padding: 20px;
         }
 
-        .shake { animation: screenShake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        /* Entwarnungs-Screen */
+        #safeZone {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            z-index: 110;
+        }
+
+        #safeZone h2 {
+            color: var(--neon-green);
+            text-shadow: 0 0 15px var(--neon-green);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        #safeZone p {
+            color: #cbd5e1;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
 
     </style>
 </head>
 <body>
 
-    <h1>Trojan.exe <br><span style="font-size: 1rem; color: var(--neon-blue); font-weight: normal; text-shadow: none;">// Security Simulation</span></h1>
+    <h1 id="mainTitle">Trojan.exe <br><span style="font-size: 1rem; color: var(--neon-blue); font-weight: normal; text-shadow: none;">// Security Simulation</span></h1>
     
     <div class="glass-panel" id="mainPanel">
         <button id="startBtn">System starten</button>
@@ -233,6 +260,22 @@
         </div>
     </div>
 
+    <div id="crashScreen">
+        <div>
+            > CRITICAL_SYSTEM_FAILURE<br>
+            > MEMORY_CORRUPTION_DETECTED<br>
+            > DUMPING PHYSICAL MEMORY...<br>
+            > SHUTTING DOWN.
+        </div>
+    </div>
+
+    <div class="glass-panel hidden" id="safeZone">
+        <h2>KEINE PANIK!</h2>
+        <p>Dein PC ist nicht abgestürzt.<br>Das war nur eine visuelle Simulation im Browser.</p>
+        <p style="font-size: 1rem; color: var(--neon-blue);">// Lerninhalt: Trojaner tarnen sich und verursachen Chaos.</p>
+        <button id="startBtn" onclick="location.reload()">Simulation Neustarten</button>
+    </div>
+
     <script>
         const startBtn = document.getElementById('startBtn');
         const simulationArea = document.getElementById('simulationArea');
@@ -241,8 +284,11 @@
         const malwareApp = document.getElementById('malwareApp');
         const dataLeaks = document.querySelectorAll('.data-leak');
         const body = document.body;
+        const crashScreen = document.getElementById('crashScreen');
+        const mainPanel = document.getElementById('mainPanel');
+        const mainTitle = document.getElementById('mainTitle');
+        const safeZone = document.getElementById('safeZone');
 
-        // Typ-Effekt für den Terminal-Text
         function typeWriter(text, element, speed = 30) {
             element.innerHTML = "> ";
             let i = 0;
@@ -267,28 +313,51 @@
             benignApp.classList.remove('floating');
             typeWriter("Führe Super_Game_Free.exe aus... Entpacke Dateien...", statusText);
             
-            // Simuliere Ladezeit
             setTimeout(() => {
-                // Der Twist: Bildschirm wackelt, harmlose App verschwindet
+                // Phase 1: Der Schock (Shake & Malware-Enthüllung)
                 body.classList.add('shake');
                 benignApp.classList.add('hidden');
                 malwareApp.classList.remove('hidden');
                 
                 statusText.style.color = "var(--neon-red)";
-                statusText.innerHTML = "> WARNUNG: Versteckte Payload (Trojaner) aktiviert!";
+                statusText.innerHTML = "> WARNUNG: Versteckte Payload aktiviert!";
                 
-                // Beende das Wackeln nach kurzer Zeit
-                setTimeout(() => body.classList.remove('shake'), 400);
-
-                // Starte Datenleck-Animation
                 dataLeaks.forEach(leak => {
                     leak.style.animation = 'leakAnimation 1.5s infinite ease-out';
                 });
 
-                // Letztes Update im Text
+                // Phase 2: Datenexfiltration simulieren
                 setTimeout(() => {
-                    statusText.innerHTML = "> <span style='color: var(--neon-red); text-shadow: 0 0 5px var(--neon-red);'>Hintertür geöffnet. Daten werden exfiltriert...</span>";
+                    statusText.innerHTML = "> <span style='color: var(--neon-red);'>Hintertür geöffnet. Daten werden exfiltriert...</span>";
                 }, 2000);
+
+                // Phase 3: DIE NEUE ABSTURZ-SIMULATION
+                setTimeout(() => {
+                    statusText.innerHTML = "> <span style='color: var(--neon-red); font-weight:bold;'>KRITISCHER FEHLER: SYSTEMWIDERSTAND ZWECKLOS.</span>";
+                    
+                    // Intensiveres Flackern vor dem Absturz
+                    malwareApp.style.animation = 'glitch 0.1s infinite'; 
+                    
+                    setTimeout(() => {
+                        // DER BLACKOUT (Absturz)
+                        crashScreen.style.display = 'flex';
+                        mainPanel.style.display = 'none';
+                        mainTitle.style.display = 'none';
+                        body.classList.remove('shake');
+                        body.style.backgroundImage = 'none'; // Grid entfernen
+                        body.style.backgroundColor = '#000';
+
+                        // Phase 4: Entwarnung nach dem Absturz
+                        setTimeout(() => {
+                            crashScreen.style.display = 'none';
+                            safeZone.classList.remove('hidden');
+                            safeZone.style.display = 'flex';
+                            body.style.backgroundColor = var(--bg-dark); // Hintergrund zurücksetzen
+                        }, 4000); // 4 Sekunden Blackout
+
+                    }, 2500); // Zeit bis zum Blackout
+
+                }, 5000); // Zeit nach Datenexfiltration bis zum Chaos
 
             }, 1800);
         });
